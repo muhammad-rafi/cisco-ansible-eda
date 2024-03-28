@@ -1,0 +1,25 @@
+---
+- name: Display Messages Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Print all Available Facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - name: Check Ansible version
+      command: ansible --version
+      register: ansibleVersion
+
+    - name: Print Ansible Version
+      debug:
+        msg: "Ansible Version: {{ ansibleVersion.stdout }}"
+
+    - name:  Print Success Message
+      ansible.builtin.debug:
+        msg: |
+          You nailed it, you hit this playbook by 
+          running your rulebook :)
+

@@ -1,0 +1,30 @@
+---
+- name: Playbook To Enable Protected Interface Automagically
+  hosts: "{{ target_host }}"
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+
+  tasks:
+    - name: Displaying the rulebook variables from the rulebook
+      ansible.builtin.debug:
+        msg: |
+          Impacted Device: {{ target_host }} # or {{ ansible_eda.event.body.fields.host_name }}
+          Interface: {{ interface }} # or {{ ansible_eda.event.body.fields.if_name }}
+          Status: {{ interface_state }} #  or {{ ansible_eda.event.body.fields.new_state }}
+
+    - name: Enabling the {{ interface }} on {{ host }}
+      cisco.ios.ios_config:
+        parents: "interface {{ interface }}"
+        lines:
+          - no shutdown
+        save_when: modified
+
+    - name: Getting the {{ interface }} status
+      cisco.ios.ios_command:
+        commands: show interface {{ interface }}
+      register: output
+
+    - name: Displing the {{ interface }} status
+      ansible.builtin.debug:
+        msg: "{{ output.stdout }}"
+

@@ -1,0 +1,35 @@
+---
+- name: Listen Kafka Events for Inteface Down
+  hosts: all
+  sources:
+  - ansible.eda.kafka:
+      host: devnetbox # localhost if Kafka running locally
+      port: 9092
+      topic: cisco-telemetry
+      group_id: ansible-eda
+
+  rules:
+    # - name: Print Events on the Terminal
+    #   condition: events.body is defined
+    #   action:
+    #     print_event:
+    #       pretty: true
+    #       # var_root: i
+
+    - name: Display Kafka Logs and Run Action Playbook
+      # for ioxe interface change
+      condition: events.body.fields.host_name == "cml-dist-rtr01" and events.body.fields.if_name == "Loopback100" and events.body.fields.new_state == "interface-notif-state-down"
+      action:
+        run_playbook:
+          name: playbooks/xe-interface-noshut.yml
+          extra_vars:
+            target_host: "{{ event.body.fields.host_name }}"
+            interface: "{{ event.body.fields.if_name }}"
+          verbosity: 1
+          set_facts: true
+
+
+# To run this rulebook
+#  ansible-rulebook --rulebook rulebooks/xe-interface-rulebook.yml -i cml_hosts.yml --verbose
+#  ansible-rulebook --rulebook rulebooks/xe-interface-rulebook.yml -i cml_hosts.yml --verbose --print-events
+

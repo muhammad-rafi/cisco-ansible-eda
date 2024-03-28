@@ -1,0 +1,52 @@
+all:
+  children:
+    ansible_controller:
+      hosts:
+        localhost:
+          ansible_host: 127.0.0.1
+    cml_devices:
+      vars:
+        ansible_libssh_user: admin
+        ansible_libssh_pass: C1sco123
+      children:
+        cml_ios:
+          hosts:
+            cml-internet-rtr01:
+              ansible_host: cml-internet-rtr01
+              ansible_network_os: cisco.ios.ios
+              site: cml
+            cml-edge-sw01:
+              ansible_host: cml-edge-sw01
+              ansible_network_os: cisco.ios.ios
+              site: cml
+        cml_iosxr:
+          hosts:
+            cml-core-rtr01:
+              ansible_host: cml-core-rtr01
+              ansible_network_os: cisco.iosxr.iosxr
+              site: cml
+            cml-core-rtr02:
+              ansible_host: cml-core-rtr02
+              ansible_network_os: cisco.iosxr.iosxr
+              site: cml
+        cml_iosxe:
+          hosts:
+            cml-dist-rtr01:
+              ansible_host: cml-dist-rtr01
+              ansible_network_os: cisco.ios.ios
+              site: cml
+            cml-dist-rtr02:
+              ansible_host: cml-dist-rtr02
+              ansible_network_os: cisco.ios.ios
+              site: cml
+        cml_nxos:
+          hosts:
+            cml-dist-sw01:
+              ansible_host: cml-dist-sw01
+              ansible_network_os: cisco.nxos.nxos
+              site: cml
+            cml-dist-sw02:
+              ansible_host: cml-dist-sw02
+              ansible_network_os: cisco.nxos.nxos
+              site: cml
+

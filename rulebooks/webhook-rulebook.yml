@@ -1,0 +1,22 @@
+---
+- name: Listen for events on a webhook
+  hosts: localhost
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 8000
+
+  rules:
+    - name: Run playbook with this rule
+      condition: event.payload.message == "Learning Ansible EDA is awesome"
+      action:
+        run_playbook:
+          name: playbooks/webhook-playbook.yml
+
+
+# To run this rulebook
+# ansible-rulebook --rulebook rulebooks/webhook-rulebook.yml -i cml_hosts.yml --verbose
+
+# To trigger this rulebook
+# curl -H 'Content-Type: application/json' -d "{\"message\": \"Learning Ansible EDA is awesome\"}" 10.250.78.80:8000/endpoint
+

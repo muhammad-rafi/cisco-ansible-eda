@@ -10,21 +10,27 @@
         msg: |
           Impacted Device: {{ target_host }} # or {{ ansible_eda.event.body.fields.host_name }}
           Interface: {{ interface }} # or {{ ansible_eda.event.body.fields.if_name }}
-          Status: {{ interface_state }} #  or {{ ansible_eda.event.body.fields.new_state }}
+          Status: {{ ansible_eda.event.body.fields.new_state }}
 
-    - name: Enabling the {{ interface }} on {{ host }}
+    - name: Enabling the {{ interface }} on {{ target_host }}
       cisco.ios.ios_config:
         parents: "interface {{ interface }}"
         lines:
           - no shutdown
         save_when: modified
 
-    - name: Getting the {{ interface }} status
-      cisco.ios.ios_command:
-        commands: show interface {{ interface }}
-      register: output
+    # - name: Getting the {{ interface }} status
+    #   cisco.ios.ios_command:
+    #     commands: show interface {{ interface }}
+    #   register: output
 
-    - name: Displing the {{ interface }} status
+    # - name: Check the running-config against master config
+    #   cisco.ios.ios_config:
+    #     diff_against: startup
+    #   register: diff_output
+
+    - name: Displing Config Diff 
       ansible.builtin.debug:
-        msg: "{{ output.stdout }}"
+        msg: "{{ diff_output }}"
+
 

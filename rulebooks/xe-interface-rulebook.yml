@@ -7,6 +7,10 @@
       port: 9092
       topic: cisco-telemetry
       group_id: ansible-eda
+      offset: latest # [latest, earliest]
+      verify_mode: CERT_NONE
+      # sasl_plain_username: # Username for SASL PLAIN authentication
+      # sasl_plain_password: # Password for SASL PLAIN authentication
 
   rules:
     # - name: Print Events on the Terminal
@@ -17,7 +21,6 @@
     #       # var_root: i
 
     - name: Display Kafka Logs and Run Action Playbook
-      # for ioxe interface change
       condition: events.body.fields.host_name == "cml-dist-rtr01" and events.body.fields.if_name == "Loopback100" and events.body.fields.new_state == "interface-notif-state-down"
       action:
         run_playbook:
@@ -28,6 +31,22 @@
           verbosity: 1
           set_facts: true
 
+    - name: Set Fact from Rulebook to pass to Playbook
+      condition: events.body.fields.new_state == "interface-notif-state-down"
+      action:
+        set_fact:
+          # ruleset: Test Ruleset1
+          fact: 
+            interface_status: "{{ event.body.fields.new_state }}"
+
+    - name: Parsed Hostname and Interface Name
+      condition: events.body.fields is defined
+      action:
+        debug:
+          msg:
+            - "target host is {{ event.body.fields.host_name }}"
+            - "interface is {{ event.body.fields.if_name }}"
+            - "interface_status is {{ event.body.fields.new_state }}"
 
 # To run this rulebook
 #  ansible-rulebook --rulebook rulebooks/xe-interface-rulebook.yml -i cml_hosts.yml --verbose

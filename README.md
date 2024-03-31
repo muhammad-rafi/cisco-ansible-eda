@@ -29,7 +29,7 @@ zookeeper           wurstmeister/zookeeper            "/bin/sh -c '/usr/sb…"  
 ```
 
 #### Create A Virtual Environment
-`Note:` You may choose your favourite method to create your virtual environment 
+`Note:` You may choose your favorites method to create your virtual environment and name the virtual environment
 
 ```shell
 [root@devnetbox ~]# python3 -m venv ansible_latest
@@ -38,7 +38,7 @@ zookeeper           wurstmeister/zookeeper            "/bin/sh -c '/usr/sb…"  
 ```
 
 #### Install All Required Packages to Start with Ansible EDA
-`Note:` Move on to next section if you like to install required packages seperately
+`Note:` Move on to next step if you like to install required packages separately
 
 ```shell
 (ansible_latest) [root@devnetbox ~]# pip install -r requirements.txt 
@@ -74,245 +74,8 @@ Collecting cffi==1.15.1 (from -r requirements.txt (line 15))
   Using cached cffi-1.15.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.1 kB)
 Collecting charset-normalizer==3.2.0 (from -r requirements.txt (line 16))
   Using cached charset_normalizer-3.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (31 kB)
-Collecting cryptography==41.0.2 (from -r requirements.txt (line 17))
-  Using cached cryptography-41.0.2-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (5.2 kB)
-Collecting debtcollector==2.5.0 (from -r requirements.txt (line 18))
-  Using cached debtcollector-2.5.0-py3-none-any.whl.metadata (2.3 kB)
-Collecting deepdiff==5.7.0 (from -r requirements.txt (line 19))
-  Using cached deepdiff-5.7.0-py3-none-any.whl.metadata (17 kB)
-Collecting docutils==0.20.1 (from -r requirements.txt (line 20))
-  Using cached docutils-0.20.1-py3-none-any.whl.metadata (2.8 kB)
-Collecting dpath==2.1.6 (from -r requirements.txt (line 21))
-  Using cached dpath-2.1.6-py3-none-any.whl.metadata (15 kB)
-Collecting drools_jpy==0.3.9 (from -r requirements.txt (line 22))
-  Using cached drools_jpy-0.3.9-py3-none-any.whl.metadata (15 kB)
-Collecting enrich==1.2.7 (from -r requirements.txt (line 23))
-  Using cached enrich-1.2.7-py3-none-any.whl.metadata (3.9 kB)
-Collecting frozenlist==1.4.1 (from -r requirements.txt (line 24))
-  Using cached frozenlist-1.4.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (12 kB)
-Collecting hvac==0.11.2 (from -r requirements.txt (line 25))
-  Using cached hvac-0.11.2-py2.py3-none-any.whl.metadata (2.8 kB)
-Collecting idna==3.4 (from -r requirements.txt (line 26))
-  Using cached idna-3.4-py3-none-any.whl.metadata (9.8 kB)
-Collecting importlib-metadata==6.2.1 (from -r requirements.txt (line 27))
-  Using cached importlib_metadata-6.2.1-py3-none-any.whl.metadata (5.0 kB)
-Collecting importlib-resources==5.0.7 (from -r requirements.txt (line 28))
-  Using cached importlib_resources-5.0.7-py3-none-any.whl.metadata (2.8 kB)
-Collecting infoblox-client==0.5.0 (from -r requirements.txt (line 29))
-  Using cached infoblox_client-0.5.0-py2.py3-none-any.whl.metadata (20 kB)
-Collecting ipconflict==0.5.0 (from -r requirements.txt (line 30))
-  Using cached ipconflict-0.5.0-py2.py3-none-any.whl.metadata (1.9 kB)
-Collecting iso8601==2.0.0 (from -r requirements.txt (line 31))
-  Using cached iso8601-2.0.0-py3-none-any.whl.metadata (3.6 kB)
-Collecting janus==1.0.0 (from -r requirements.txt (line 32))
-  Using cached janus-1.0.0-py3-none-any.whl.metadata (4.5 kB)
-Collecting Jinja2==3.1.2 (from -r requirements.txt (line 33))
-  Using cached Jinja2-3.1.2-py3-none-any.whl.metadata (3.5 kB)
-Collecting jmespath==0.10.0 (from -r requirements.txt (line 34))
-  Using cached jmespath-0.10.0-py2.py3-none-any.whl.metadata (8.0 kB)
-Collecting jpy==0.15.0 (from -r requirements.txt (line 35))
-  Using cached jpy-0.15.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (14 kB)
-Collecting jsonschema==4.21.1 (from -r requirements.txt (line 36))
-  Using cached jsonschema-4.21.1-py3-none-any.whl.metadata (7.8 kB)
-Collecting jsonschema-specifications==2023.12.1 (from -r requirements.txt (line 37))
-  Using cached jsonschema_specifications-2023.12.1-py3-none-any.whl.metadata (3.0 kB)
-Collecting lockfile==0.12.2 (from -r requirements.txt (line 38))
-  Using cached lockfile-0.12.2-py2.py3-none-any.whl.metadata (2.4 kB)
-Collecting markdown-it-py==3.0.0 (from -r requirements.txt (line 39))
-  Using cached markdown_it_py-3.0.0-py3-none-any.whl.metadata (6.9 kB)
-Collecting MarkupSafe==2.1.3 (from -r requirements.txt (line 40))
-  Using cached MarkupSafe-2.1.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
-Collecting mdurl==0.1.2 (from -r requirements.txt (line 41))
-  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
-Collecting msgpack==1.0.5 (from -r requirements.txt (line 42))
-  Using cached msgpack-1.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (8.8 kB)
-Collecting multidict==6.0.5 (from -r requirements.txt (line 43))
-  Using cached multidict-6.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
-Collecting netaddr==0.8.0 (from -r requirements.txt (line 44))
-  Using cached netaddr-0.8.0-py2.py3-none-any.whl.metadata (4.9 kB)
-Collecting netifaces==0.11.0 (from -r requirements.txt (line 45))
-  Using cached netifaces-0.11.0.tar.gz (30 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Installing backend dependencies ... done
-  Preparing metadata (pyproject.toml) ... done
-Collecting ordered-set==4.0.2 (from -r requirements.txt (line 46))
-  Using cached ordered_set-4.0.2-py2.py3-none-any.whl
-Collecting oslo.config==9.2.0 (from -r requirements.txt (line 47))
-  Using cached oslo.config-9.2.0-py3-none-any.whl.metadata (3.1 kB)
-Collecting oslo.context==5.2.0 (from -r requirements.txt (line 48))
-  Using cached oslo.context-5.2.0-py3-none-any.whl.metadata (2.0 kB)
-Collecting oslo.i18n==6.1.0 (from -r requirements.txt (line 49))
-  Using cached oslo.i18n-6.1.0-py3-none-any.whl.metadata (2.0 kB)
-Collecting oslo.log==5.3.0 (from -r requirements.txt (line 50))
-  Using cached oslo.log-5.3.0-py3-none-any.whl.metadata (3.1 kB)
-Collecting oslo.serialization==5.2.0 (from -r requirements.txt (line 51))
-  Using cached oslo.serialization-5.2.0-py3-none-any.whl.metadata (2.2 kB)
-Collecting oslo.utils==6.2.1 (from -r requirements.txt (line 52))
-  Using cached oslo.utils-6.2.1-py3-none-any.whl.metadata (2.2 kB)
-Collecting packaging==23.1 (from -r requirements.txt (line 53))
-  Using cached packaging-23.1-py3-none-any.whl.metadata (3.1 kB)
-Collecting paramiko==3.4.0 (from -r requirements.txt (line 54))
-  Using cached paramiko-3.4.0-py3-none-any.whl.metadata (4.4 kB)
-Collecting pbr==5.11.1 (from -r requirements.txt (line 55))
-  Using cached pbr-5.11.1-py2.py3-none-any.whl.metadata (1.3 kB)
-Collecting pexpect==4.9.0 (from -r requirements.txt (line 56))
-  Using cached pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
-Collecting ptyprocess==0.7.0 (from -r requirements.txt (line 57))
-  Using cached ptyprocess-0.7.0-py2.py3-none-any.whl.metadata (1.3 kB)
-Collecting py-radix==0.10.0 (from -r requirements.txt (line 58))
-  Using cached py-radix-0.10.0.tar.gz (21 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Installing backend dependencies ... done
-  Preparing metadata (pyproject.toml) ... done
-Collecting pycparser==2.21 (from -r requirements.txt (line 59))
-  Using cached pycparser-2.21-py2.py3-none-any.whl.metadata (1.1 kB)
-Collecting Pygments==2.16.1 (from -r requirements.txt (line 60))
-  Using cached Pygments-2.16.1-py3-none-any.whl.metadata (2.5 kB)
-Collecting PyNaCl==1.5.0 (from -r requirements.txt (line 61))
-  Using cached PyNaCl-1.5.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl.metadata (8.6 kB)
-Collecting pyOpenSSL==23.2.0 (from -r requirements.txt (line 62))
-  Using cached pyOpenSSL-23.2.0-py3-none-any.whl.metadata (10 kB)
-Collecting pyparsing==3.1.1 (from -r requirements.txt (line 63))
-  Using cached pyparsing-3.1.1-py3-none-any.whl.metadata (5.1 kB)
-Collecting python-daemon==3.0.1 (from -r requirements.txt (line 64))
-  Using cached python_daemon-3.0.1-py3-none-any.whl.metadata (2.2 kB)
-Collecting python-dateutil==2.8.2 (from -r requirements.txt (line 65))
-  Using cached python_dateutil-2.8.2-py2.py3-none-any.whl.metadata (8.2 kB)
-Requirement already satisfied: pytz==2023.3.post1 in ./ansible_latest/lib64/python3.11/site-packages (from -r requirements.txt (line 66)) (2023.3.post1)
-Collecting PyYAML==6.0 (from -r requirements.txt (line 67))
-  Using cached PyYAML-6.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
-Collecting referencing==0.34.0 (from -r requirements.txt (line 68))
-  Using cached referencing-0.34.0-py3-none-any.whl.metadata (2.8 kB)
-Collecting requests==2.31.0 (from -r requirements.txt (line 69))
-  Using cached requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
-Requirement already satisfied: resolvelib==1.0.1 in ./ansible_latest/lib64/python3.11/site-packages (from -r requirements.txt (line 70)) (1.0.1)
-Collecting rfc3986==2.0.0 (from -r requirements.txt (line 71))
-  Using cached rfc3986-2.0.0-py2.py3-none-any.whl.metadata (6.6 kB)
-Collecting rich==13.5.3 (from -r requirements.txt (line 72))
-  Using cached rich-13.5.3-py3-none-any.whl.metadata (18 kB)
-Collecting rpds-py==0.18.0 (from -r requirements.txt (line 73))
-  Using cached rpds_py-0.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
-Collecting ruamel.yaml==0.17.32 (from -r requirements.txt (line 74))
-  Using cached ruamel.yaml-0.17.32-py3-none-any.whl.metadata (17 kB)
-Collecting ruamel.yaml.clib==0.2.7 (from -r requirements.txt (line 75))
-  Using cached ruamel.yaml.clib-0.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl.metadata (2.2 kB)
-Collecting six==1.16.0 (from -r requirements.txt (line 76))
-  Using cached six-1.16.0-py2.py3-none-any.whl.metadata (1.8 kB)
-Collecting stevedore==5.1.0 (from -r requirements.txt (line 77))
-  Using cached stevedore-5.1.0-py3-none-any.whl.metadata (2.2 kB)
-Collecting tenacity==8.2.3 (from -r requirements.txt (line 78))
-  Using cached tenacity-8.2.3-py3-none-any.whl.metadata (1.0 kB)
-Collecting tqdm==4.66.1 (from -r requirements.txt (line 79))
-  Using cached tqdm-4.66.1-py3-none-any.whl.metadata (57 kB)
-Collecting typing_extensions==4.10.0 (from -r requirements.txt (line 80))
-  Using cached typing_extensions-4.10.0-py3-none-any.whl.metadata (3.0 kB)
-Collecting tzdata==2023.3 (from -r requirements.txt (line 81))
-  Using cached tzdata-2023.3-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting urllib3==2.0.4 (from -r requirements.txt (line 82))
-  Using cached urllib3-2.0.4-py3-none-any.whl.metadata (6.6 kB)
-Collecting watchdog==4.0.0 (from -r requirements.txt (line 83))
-  Using cached watchdog-4.0.0-py3-none-manylinux2014_x86_64.whl.metadata (37 kB)
-Collecting wcmatch==8.5 (from -r requirements.txt (line 84))
-  Using cached wcmatch-8.5-py3-none-any.whl.metadata (5.1 kB)
-Collecting websockets==12.0 (from -r requirements.txt (line 85))
-  Using cached websockets-12.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
-Collecting wrapt==1.15.0 (from -r requirements.txt (line 86))
-  Using cached wrapt-1.15.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
-Requirement already satisfied: xkcdpass==1.19.8 in ./ansible_latest/lib64/python3.11/site-packages (from -r requirements.txt (line 87)) (1.19.8)
-Collecting yarl==1.9.4 (from -r requirements.txt (line 88))
-  Using cached yarl-1.9.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (31 kB)
-Collecting zipp==3.18.1 (from -r requirements.txt (line 89))
-  Using cached zipp-3.18.1-py3-none-any.whl.metadata (3.5 kB)
-Requirement already satisfied: setuptools>=17.1 in ./ansible_latest/lib64/python3.11/site-packages (from infoblox-client==0.5.0->-r requirements.txt (line 29)) (65.5.1)
-Requirement already satisfied: pyinotify>=0.9.6 in ./ansible_latest/lib64/python3.11/site-packages (from oslo.log==5.3.0->-r requirements.txt (line 50)) (0.9.6)
-Using cached aiohttp-3.9.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
-Using cached aiokafka-0.10.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.1 MB)
-Using cached aiosignal-1.3.1-py3-none-any.whl (7.6 kB)
-Using cached ansible-8.7.0-py3-none-any.whl (48.4 MB)
-Using cached ansible_core-2.15.10-py3-none-any.whl (2.3 MB)
-Using cached ansible_lint-5.4.0-py3-none-any.whl (119 kB)
-Using cached ansible_pylibssh-1.1.0-cp311-cp311-manylinux_2_24_x86_64.whl (2.3 MB)
-Using cached ansible_runner-2.3.6-py3-none-any.whl (81 kB)
-Using cached ansible_rulebook-1.0.6-py3-none-any.whl (74 kB)
-Using cached async_timeout-4.0.3-py3-none-any.whl (5.7 kB)
-Using cached attrs-23.2.0-py3-none-any.whl (60 kB)
-Using cached bcrypt-4.1.2-cp39-abi3-manylinux_2_28_x86_64.whl (698 kB)
-Using cached bracex-2.4-py3-none-any.whl (11 kB)
-Using cached certifi-2023.7.22-py3-none-any.whl (158 kB)
-Using cached cffi-1.15.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (462 kB)
-Using cached charset_normalizer-3.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (199 kB)
-Using cached cryptography-41.0.2-cp37-abi3-manylinux_2_28_x86_64.whl (4.3 MB)
-Using cached debtcollector-2.5.0-py3-none-any.whl (23 kB)
-Using cached deepdiff-5.7.0-py3-none-any.whl (68 kB)
-Using cached docutils-0.20.1-py3-none-any.whl (572 kB)
-Using cached dpath-2.1.6-py3-none-any.whl (17 kB)
-Using cached drools_jpy-0.3.9-py3-none-any.whl (6.6 MB)
-Using cached enrich-1.2.7-py3-none-any.whl (8.7 kB)
-Using cached frozenlist-1.4.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (272 kB)
-Using cached hvac-0.11.2-py2.py3-none-any.whl (148 kB)
-Using cached idna-3.4-py3-none-any.whl (61 kB)
-Using cached importlib_metadata-6.2.1-py3-none-any.whl (21 kB)
-Using cached importlib_resources-5.0.7-py3-none-any.whl (24 kB)
-Using cached infoblox_client-0.5.0-py2.py3-none-any.whl (173 kB)
-Using cached ipconflict-0.5.0-py2.py3-none-any.whl (16 kB)
-Using cached iso8601-2.0.0-py3-none-any.whl (7.5 kB)
-Using cached janus-1.0.0-py3-none-any.whl (6.9 kB)
-Using cached Jinja2-3.1.2-py3-none-any.whl (133 kB)
-Using cached jmespath-0.10.0-py2.py3-none-any.whl (24 kB)
-Using cached jpy-0.15.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (348 kB)
-Using cached jsonschema-4.21.1-py3-none-any.whl (85 kB)
-Using cached jsonschema_specifications-2023.12.1-py3-none-any.whl (18 kB)
-Using cached lockfile-0.12.2-py2.py3-none-any.whl (13 kB)
-Using cached markdown_it_py-3.0.0-py3-none-any.whl (87 kB)
-Using cached MarkupSafe-2.1.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (28 kB)
-Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-Using cached msgpack-1.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
-Using cached multidict-6.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (128 kB)
-Using cached netaddr-0.8.0-py2.py3-none-any.whl (1.9 MB)
-Using cached oslo.config-9.2.0-py3-none-any.whl (128 kB)
-Using cached oslo.context-5.2.0-py3-none-any.whl (20 kB)
-Using cached oslo.i18n-6.1.0-py3-none-any.whl (46 kB)
-Using cached oslo.log-5.3.0-py3-none-any.whl (76 kB)
-Using cached oslo.serialization-5.2.0-py3-none-any.whl (26 kB)
-Using cached oslo.utils-6.2.1-py3-none-any.whl (101 kB)
-Using cached packaging-23.1-py3-none-any.whl (48 kB)
-Using cached paramiko-3.4.0-py3-none-any.whl (225 kB)
-Using cached pbr-5.11.1-py2.py3-none-any.whl (112 kB)
-Using cached pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
-Using cached ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
-Using cached pycparser-2.21-py2.py3-none-any.whl (118 kB)
-Using cached Pygments-2.16.1-py3-none-any.whl (1.2 MB)
-Using cached PyNaCl-1.5.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (856 kB)
-Using cached pyOpenSSL-23.2.0-py3-none-any.whl (59 kB)
-Using cached pyparsing-3.1.1-py3-none-any.whl (103 kB)
-Using cached python_daemon-3.0.1-py3-none-any.whl (31 kB)
-Using cached python_dateutil-2.8.2-py2.py3-none-any.whl (247 kB)
-Using cached PyYAML-6.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (757 kB)
-Using cached referencing-0.34.0-py3-none-any.whl (26 kB)
-Using cached requests-2.31.0-py3-none-any.whl (62 kB)
-Using cached rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
-Using cached rich-13.5.3-py3-none-any.whl (239 kB)
-Using cached rpds_py-0.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.1 MB)
-Using cached ruamel.yaml-0.17.32-py3-none-any.whl (112 kB)
-Using cached ruamel.yaml.clib-0.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (505 kB)
-Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
-Using cached stevedore-5.1.0-py3-none-any.whl (49 kB)
-Using cached tenacity-8.2.3-py3-none-any.whl (24 kB)
-Using cached tqdm-4.66.1-py3-none-any.whl (78 kB)
-Using cached typing_extensions-4.10.0-py3-none-any.whl (33 kB)
-Using cached tzdata-2023.3-py2.py3-none-any.whl (341 kB)
-Using cached urllib3-2.0.4-py3-none-any.whl (123 kB)
-Using cached watchdog-4.0.0-py3-none-manylinux2014_x86_64.whl (82 kB)
-Using cached wcmatch-8.5-py3-none-any.whl (39 kB)
-Using cached websockets-12.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (130 kB)
-Using cached wrapt-1.15.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (78 kB)
-Using cached yarl-1.9.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (328 kB)
-Using cached zipp-3.18.1-py3-none-any.whl (8.2 kB)
-Building wheels for collected packages: netifaces, py-radix
 
-... Omitted
+... Output Omitted
 ```
 
 #### Install Ansible within your Virtual Environment 
@@ -390,7 +153,7 @@ Successfully installed bcrypt-4.1.2 paramiko-3.4.0 pynacl-1.5.0
 ```
 
 #### Install Ansible PyLibssh for Ansible to use SSH to Network Devices
-`Note:` This is optional, you may use `paramiko` only as mentioned in the previous section.
+`Note:` This is optional, you may use `paramiko` only as mentioned in the previous step.
 
 ```shell
 (ansible_latest) [root@devnetbox ~]# pip install ansible-pylibssh
@@ -402,7 +165,7 @@ Successfully installed ansible-pylibssh-1.1.0
 (ansible_latest) [root@devnetbox ~]# 
 ```
 
-#### Instal IO Kafka for the Ansible Kafka Plugin
+#### Install IO Kafka for the Ansible Kafka Plugin
 ```shell
 (ansible_latest) [root@devnetbox ~]# pip install aiokafka
 Collecting aiokafka
@@ -415,7 +178,7 @@ Successfully installed aiokafka-0.10.0
 (ansible_latest) [root@devnetbox ~]# 
 ```
 
-#### Install LZ4 compression library
+#### Install LZ4 compression library (optional)
 ```shell
 (ansible_latest) [root@devnetbox ~]# pip install lz4
 Collecting lz4
@@ -541,7 +304,7 @@ drwx------. 2 root root 24 Mar 28 00:05 ansible.eda-1.4.5.info
 [root@devnetbox ~]# 
 ```
 
-#### Generate SSH Keys (if you haven't generated them already)
+#### Generate SSH Keys (Optional)
 `Note:` This is only required if you like to use SSH Keys to pull githib repo without using password. You need to add your public key to Github in the Settings.
 
 ```shell

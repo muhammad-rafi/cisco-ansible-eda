@@ -5,7 +5,7 @@
   gather_facts: false
 
   tasks:
-    - name: Displaying the rulebook variables from the rulebook
+    - name: Displaying the Rulebook Variables from the Rulebook
       ansible.builtin.debug:
         msg: |
           Impacted Device: {{ target_host }} # or {{ ansible_eda.event.body.fields.host_name }}
@@ -29,7 +29,7 @@
     #     diff_against: startup
     #   register: diff_output
 
-    - name: Displing Config Diff 
+    - name: Display Config Diff 
       ansible.builtin.debug:
         msg: "{{ diff_output }}"
 

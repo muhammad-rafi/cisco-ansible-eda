@@ -32,10 +32,9 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.250.78.80:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.250.78.80:9092 # Replace IP with the Kafka Server IP/Hostname you like to use
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "cisco-telemetry:1:1"
+      KAFKA_CREATE_TOPICS: "cisco-telemetry:1:1" # Replace the topc name you like to use
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       JAVA_OPTS: "-Xms256m -Xmx256m"
       ALLOW_PLAINTEXT_LISTENER: yes
@@ -56,7 +55,6 @@ services:
       - 9000:9000
     environment:
       KAFKA_BROKERCONNECT: kafka:9092
-      # JVM_OPTS: "-Xms16M -Xmx512M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
     depends_on:
       - kafka
     networks:

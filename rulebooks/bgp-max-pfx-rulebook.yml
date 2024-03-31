@@ -1,0 +1,35 @@
+---
+#  ansible-rulebook --rulebook rulebooks/bgp-max-pfx-rulebook.yml -i cml_hosts.yml --verbose
+- name: Listen Kafka Events for BGP Neighbors
+  hosts: all
+  sources:
+  - ansible.eda.kafka:
+      host: devnetbox
+      port: 9092
+      topic: cisco-telemetry
+      group_id: ansible-eda
+      offset: latest
+      verify_mode: CERT_NONE
+
+  rules:
+    - name: Display Kafka Logs and Run Action Playbook
+      # for ioxr BGP neighbor down due to prefix limit exceeded
+      condition: events.body.fields.is_neighbor_max_prefix_shutdown == "true" and events.body.fields.reset_reason == "max-prefix-exceeded"
+      action:
+        run_playbook:
+          name: playbooks/bgp-max-pfx-fix.yml
+          extra_vars:
+            target_host: "{{ event.body.tags.source }}"
+            bgp_neighbor: "{{ event.body.tags.neighbor_address }}"
+            bgp_remote_asn: "{{ event.body.fields.remote_as_number }}"
+            bgp_local_asn: "{{ event.body.fields.local_as }}"
+          verbosity: 1
+
+    - name: Reason for BGP State Down
+      condition: events.body.fields.open_check_error_code == "neighbor-down"
+      action:
+        debug:
+          msg: |
+            BGP neighbor {{ event.body.tags.neighbor_address }} on {{ event.body.tags.source }} 
+            with Local AS{{ event.body.fields.local_as }} and Remote AS{{ event.body.fields.remote_as_number }} 
+            is down due to {{ event.body.fields.reset_reason }} 

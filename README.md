@@ -338,7 +338,7 @@ ssh-rsa AAAAB3NzaC1yc2 ..Omitted ..FS5bb1FJvzo1qTmPnm+Uvhw== user@example.com
 ```
 
 #### Install Curl and Java Oracle JDK
-
+```shell
 (ansible_latest) [root@devnetbox rulebooks]# dnf install curl -y
 Last metadata expiration check: 0:01:13 ago on Wed 27 Mar 2024 11:43:05 PM GMT.
 Package curl-7.61.1-30.el8_8.3.x86_64 is already installed.
@@ -376,7 +376,7 @@ There are 2 programs which provide 'java'.
 Enter to keep the current selection[+], or type selection number: ^C
 (ansible_latest) [root@devnetbox ~]#
 ```
-Note: Make sure * is pointed to the required Java version, Ctrl+c to exit, otherwise select the required option, '2' in my case.
+`Note:` Make sure * is pointed to the required Java version, Ctrl+c to exit, otherwise select the required option, '2' in my case.
 
 ```shell
 (ansible_latest) [root@devnetbox ~]# alternatives --config javac
@@ -427,7 +427,7 @@ javac                   auto    /usr/lib/jvm/jdk-17-oracle-x64/bin/javac
 ```
 
 #### Install Latest Java OpenJDK 
-`Note:` You may install Java Open JDK, however it was failed to installed for me, So I used Java Oracle JDK only as mentioned in my previous step. You only need one of these.
+`Note:` You may like to install Java Open JDK, however it was failed to installed for me, So I used Java Oracle JDK only as mentioned in my previous step. You only need one of these.
 
 ```shell
 (ansible_latest) [root@devnetbox rulebooks]# dnf install java-17-openjdk java-17-openjdk-devel
@@ -548,7 +548,7 @@ localhost                  : ok=4    changed=1    unreachable=0    failed=0    s
 2024-03-28 00:23:09,492 - ansible_rulebook.action.run_playbook - INFO - Ansible runner rc: 0, status: successful
 ```
 
-`Note:` You may see output is not formatted properly, You can use `ANSIBLE_STDOUT_CALLBACK` to make the output pretty.
+`Note:` Notice the output is not formatted properly, You can use `ANSIBLE_STDOUT_CALLBACK` to make the output pretty but it depends on the ansible config you have.
 
 ```shell
 (ansible_latest) [root@devnetbox cisco-ansible-eda]# export ANSIBLE_STDOUT_CALLBACK=yaml
@@ -602,6 +602,8 @@ localhost                  : ok=4    changed=1    unreachable=0    failed=0    s
 2024-03-28 00:30:12,402 - ansible_rulebook.action.runner - INFO - Ansible runner Queue task cancelled
 2024-03-28 00:30:12,404 - ansible_rulebook.action.run_playbook - INFO - Ansible runner rc: 0, status: successful
 ```
+
+That's it 😊, Hope you like this and if you do, please make sure you leave the star for this repo and reach out to me via [Linkedin](https://www.linkedin.com/in/muhammad-rafi-0a37a248/) if you have any queries or issues. 
 
 #### References
 

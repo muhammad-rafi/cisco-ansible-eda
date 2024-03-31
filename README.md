@@ -20,10 +20,10 @@ To verify services you need to `docker compose ps -a` and you should see the fol
 
 ```shell
 [root@devnetbox telegraf-kafka]# docker compose ps -a
-NAME                IMAGE                             COMMAND                  SERVICE             CREATED STATUS                PORTS
+NAME                IMAGE                             COMMAND                  SERVICE             CREATED             STATUS                PORTS
 kafdrop             obsidiandynamics/kafdrop:latest   "/kafdrop.sh"            kafdrop             4 days ago          Up 4 days             0.0.0.0:9000->9000/tcp
 kafka               wurstmeister/kafka                "start-kafka.sh"         kafka               4 days ago          Up 4 days             0.0.0.0:9092->9092/tcp
-telegraf            telegraf:latest                   "/entrypoint.sh tele…"   telegraf_1          4 days ago          Up 4 days             8092/udp, 8125/udp, 8094/tcp, 0.0.0.0:57501->57501/tcp
+telegraf_1          telegraf:latest                   "/entrypoint.sh tele…"   telegraf_1          4 days ago          Up 4 days             8092/udp, 8125/udp, 8094/tcp, 0.0.0.0:57501->57501/tcp
 zookeeper           wurstmeister/zookeeper            "/bin/sh -c '/usr/sb…"   zookeeper           4 days ago          Up 4 days (healthy)   22/tcp, 2888/tcp, 3888/tcp, 0.0.0.0:2181->2181/tcp
 [root@devnetbox telegraf-kafka]# 
 ```

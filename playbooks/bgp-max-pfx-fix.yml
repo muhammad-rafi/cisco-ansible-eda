@@ -9,7 +9,7 @@
     - community.general.cisco_webex
   
   vars:
-    script_dir: '~/cisco-ansible-eda/scripts'
+    script_dir: '~/cisco-ansible-eda/scripts' # select correct path in your system
     room_id: "{{ lookup('env', 'ROOM_ID') }}" # make sure you export ROOM_ID environmental variable
     token: "{{ lookup('env', 'WEBEX_TOKEN') }}" # make sure you export WEBEX_TOKEN environmental variable
 
@@ -36,7 +36,7 @@
 
     - name: Run the Python script to fetch prefixes from PeeringDB
       ansible.builtin.shell:
-        cmd: "python {{ script_dir }}peerdb_py.py {{ bgp_remote_asn }}"
+        cmd: "python {{ script_dir }}/peerdb_py.py {{ bgp_remote_asn }}"
       register: peeringdb_result
 
     - name: Extract v4prefixes and v6prefixes

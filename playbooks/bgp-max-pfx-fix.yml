@@ -1,21 +1,20 @@
 ---
-- name: BGP max prefixes fix
-  # hosts: localhost
-  # hosts: cml-core-rtr02
+- name: BGP Max Prefixes Limit Fix
   hosts: "{{ target_host }}"
   gather_facts: false
-  # connection: local
   connection: ansible.netcommon.network_cli
   collections:
     - ansible.netcommon
     - cisco.iosxr
+    - community.general.cisco_webex
+  
   vars:
     script_dir: '~/webex_ansible_repos/cml-ansible/scripts/'
-    # ansible_network_os: cisco.iosxr.iosxr
-    # ansible_connection: ansible.netcommon.network_cli
+    room_id: "{{ lookup('env', 'ROOM_ID') }}" # make sure you export ROOM_ID environmental variable
+    token: "{{ lookup('env', 'WEBEX_TOKEN') }}" # make sure you export WEBEX_TOKEN environmental variable
 
   tasks:
-    - name: Display extra vars comiing from a rulebook
+    - name: Display extra vars coming from a rulebook
       ansible.builtin.debug:
         msg:
           - "Target Host: {{ target_host }}"
@@ -23,9 +22,20 @@
           - "Local AS Number: {{ bgp_local_asn }}"
           - "Remote AS Number: {{ bgp_remote_asn }}"
 
+    - name: Cisco Webex Teams - Markdown Message to a Room
+      community.general.cisco_webex:
+        recipient_type: roomId
+        recipient_id: "{{ room_id }}"
+        msg_type: markdown
+        personal_token: "{{ token }}"
+        msg: |
+          **Device:** {{ target_host }} 
+          **BGP Neighbor (Down):** {{ bgp_neighbor }} ⛔️
+          **Remote ASN:** {{ bgp_remote_asn }} 
+          **Reason:** Prefix limited exceeded
+
     - name: Run the Python script to fetch prefixes from PeeringDB
       ansible.builtin.shell:
-        # cmd: "python ../scripts/peerdb_py.py {{ bgp_remote_asn }}"
         cmd: "python {{ script_dir }}peerdb_py.py {{ bgp_remote_asn }}"
       register: peeringdb_result
 
@@ -43,37 +53,29 @@
         state: merged
         config:
           as_number: "{{ bgp_local_asn }}"
-          # as_number: 65001
           neighbors:
             - neighbor_address: "{{ bgp_neighbor }}"
-            # - neighbor_address: 192.168.5.14
               address_family:
                 - afi: ipv4
                   safi: unicast
                   maximum_prefix:
                     max_limit: "{{ v4prefixes }}"
-                    # max_limit: 10
                     threshold_value: 75
-                    # warning_only: true
-                    # restart: 10
-                    # discard_extra_paths: false
       when: ansible_network_os == 'cisco.iosxr.iosxr'
 
-    - name: Clear BGP Neighbor Session
+    - name: Clear the BGP Neighbor Session
       cisco.iosxr.iosxr_command:
         commands: clear bgp {{ bgp_neighbor }} graceful
-        # commands: clear bgp 192.168.5.14 graceful
       when: ansible_network_os == 'cisco.iosxr.iosxr'
 
-    - name: Wait for BGP Session Reset
+    - name: Wait for the BGP Session Reset
       ansible.builtin.pause:
-        prompt: "Waitng 30 sec for BGP reset"
+        prompt: "Waiting 30 sec for BGP reset"
         seconds: 30
 
-    - name: Get BGP Neighbor State
+    - name: Get the BGP Neighbor State
       cisco.iosxr.iosxr_command:
         commands: show bgp neighbor {{ bgp_neighbor }} | utility egrep "BGP state"
-        # commands: show bgp neighbor 192.168.5.14 | utility egrep "BGP state"
       register: bgp_output
       when: ansible_network_os == 'cisco.iosxr.iosxr'
 
@@ -81,16 +83,17 @@
       debug:
         msg: "{{ bgp_output.stdout_lines }}"
 
-    ## ONLY FOR TESTING PURPOSE 
-    # - name: Retrieve IOS-XR version
-    #   cisco.iosxr.iosxr_command:
-    #     commands: show version
-    #   register: version_output
-    #   when: ansible_network_os == 'cisco.iosxr.iosxr'
+    - name: Cisco Webex Teams - Markdown Message to a Room if BGP is Established
+      community.general.cisco_webex:
+        recipient_type: roomId
+        recipient_id: "{{ room_id }}"
+        msg_type: markdown
+        personal_token: "{{ token }}"
+        msg: |
+          **Device:** {{ target_host }} 
+          **BGP Neighbor (UP):** {{ bgp_neighbor }} ✅
+          **Remote ASN:** {{ bgp_remote_asn }} 
+      when: bgp_output.stdout | regex_search('BGP state = Established')
 
-    # - name: Display Output
-    #   debug:
-    #     msg: "{{ inventory_hostname }} running with {{ version_output.stdout_lines[0][0] }}"
-
-# ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
-# ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=13445'
+# # ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
+# # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=13445'

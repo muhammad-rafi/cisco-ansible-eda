@@ -1,9 +1,11 @@
+# python scripts/peerdb_py.py bgp_remote_asn=14570
 from rich import print 
 import requests
 import json
 import sys
 import os
 requests.packages.urllib3.disable_warnings()
+
 bgp_asn = sys.argv[1]
 
 # Get the value of the PEERDB_API_KEY environment variable

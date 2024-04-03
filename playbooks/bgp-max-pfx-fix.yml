@@ -96,4 +96,4 @@
       when: bgp_output.stdout | regex_search('BGP state = Established')
 
 # # ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
-# # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=13445'
+# # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=14570'

@@ -1,4 +1,4 @@
-# python scripts/peerdb_py.py bgp_remote_asn=14570
+# python scripts/peerdb_py.py 14570
 from rich import print 
 import requests
 import json

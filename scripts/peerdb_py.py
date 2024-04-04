@@ -7,9 +7,10 @@ import os
 requests.packages.urllib3.disable_warnings()
 
 bgp_asn = sys.argv[1]
+api_key = sys.argv[2]
 
 # Get the value of the PEERDB_API_KEY environment variable
-api_key = os.environ.get("PEERDB_API_KEY")
+# api_key = os.environ.get("PEERDB_API_KEY")
 
 # Check if the PEERDB_API_KEY variable exists
 if api_key is not None:

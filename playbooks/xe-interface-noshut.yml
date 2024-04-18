@@ -19,15 +19,15 @@
           - no shutdown
         save_when: modified
 
-    # - name: Getting the {{ interface }} status
-    #   cisco.ios.ios_command:
-    #     commands: show interface {{ interface }}
-    #   register: output
+    - name: Getting the {{ interface }} status
+      cisco.ios.ios_command:
+        commands: show interface {{ interface }}
+      register: output
 
-    # - name: Check the running-config against master config
-    #   cisco.ios.ios_config:
-    #     diff_against: startup
-    #   register: diff_output
+    - name: Check the running-config against master config
+      cisco.ios.ios_config:
+        diff_against: startup
+      register: diff_output
 
     - name: Display Config Diff 
       ansible.builtin.debug:

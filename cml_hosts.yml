@@ -6,8 +6,8 @@ all:
           ansible_host: 127.0.0.1
     cml_devices:
       vars:
-        ansible_libssh_user: admin
-        ansible_libssh_pass: C1sco123
+        ansible_libssh_user: "{{ lookup('env', 'CML_USERNAME') }}"
+        ansible_libssh_pass: "{{ lookup('env', 'CML_PASSWORD') }}"
       children:
         cml_ios:
           hosts:

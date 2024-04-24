@@ -23,7 +23,7 @@
           - "Local AS Number: {{ bgp_local_asn }}"
           - "Remote AS Number: {{ bgp_remote_asn }}"
 
-    - name: Cisco Webex Teams Message to a Room
+    - name: Cisco Webex Teams - Markdown Message to a Room for BGP State
       community.general.cisco_webex:
         recipient_type: roomId
         recipient_id: "{{ room_id }}"
@@ -33,9 +33,10 @@
           **Device:** {{ target_host }} 
           **BGP Neighbor (Down):** {{ bgp_neighbor }} ⛔️
           **Description:** {{ ansible_eda.event.body.fields.description | default('N/A') }}
-          **Remote ASN:** {{ bgp_remote_asn }} 
-          **IPv4 Prefix Limit:** {{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] | default('N/A') }}
-          **IPv4 Prefix Limit Threshold:** {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] | default('N/A') }}
+          **Remote ASN:** {{ bgp_remote_asn }}
+          **Address Family:** "{{ ansible_eda.event.body.fields['af_data/af_name'] }}"
+          **Prefix Limit:** {{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] | default('N/A') }}
+          **Prefix Limit Threshold:** {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] | default('N/A') }}
           **Reason:** {{ ansible_eda.event.body.fields.reset_reason | default('N/A') }}
 
     - name: Run the Python script to fetch prefixes from PeeringDB
@@ -43,17 +44,38 @@
         cmd: "python {{ script_dir }}/peerdb_py.py {{ bgp_remote_asn }} {{ peerdb_api_key }}"
       register: peeringdb_result
 
-    - name: Extract v4prefixes and v6prefixes and set facts
+    - name: set facts for the playbook 
       ansible.builtin.set_fact:
         v4prefixes: "{{ peeringdb_result.stdout_lines[0] }}"
         v6prefixes: "{{ peeringdb_result.stdout_lines[1] }}"
+        address_family: "{{ ansible_eda.event.body.fields['af_data/af_name'] | default('N/A') }}"
+        prefix_limit: "{{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] }}"
         neighbor_desc: "{{ ansible_eda.event.body.fields.description | default('N/A') }}"
+        vrf_name: "{{ ansible_eda.event.body.fields.vrf_name | default('N/A') }}"
 
-    - name: Display v4prefixes and v6prefixes
+    - name: Display IPv4 and IPv6 prefixes limit defined in PeerdingDB
       ansible.builtin.debug:
-        msg: "v4prefixes: {{ v4prefixes }}, v6prefixes: {{ v6prefixes }}"
+        msg: "IPv4 prefixes limit: {{ v4prefixes }}, IPv6 prefixes Limit: {{ v6prefixes }}"
 
-    - name: Merge the provided configuration with the existing running configuration
+    - name: Comparing the current IPv4 prefix limit with the prefix limit defined in PeeringDB
+      ansible.builtin.assert:
+        success_msg:  "Assert that prefix limit: {{ v4prefixes }} defined in PeeringDB is greater than the Current IPv4: {{ prefix_limit }}"
+        fail_msg: "Current IPv4: {{ prefix_limit }} is equal to or less than prefix limit: {{ v4prefixes }} defined in PeeringDB"
+        that:
+          - "(v4prefixes | to_int) > (prefix_limit | to_int)"
+        quiet: false
+      when: address_family == 'ipv4' and vrf_name == 'default'
+
+    - name: Comparing the current IPv6 prefix limit with the prefix limit defined in PeeringDB
+      ansible.builtin.assert:
+        success_msg:  "Assert that prefix limit: {{ v6prefixes }} defined in PeeringDB is greater than the Current IPv6: {{ prefix_limit }}"
+        fail_msg: "Current IPv6: {{ prefix_limit }} is equal to or less than prefix limit: {{ v6prefixes }} defined in PeeringDB"
+        that:
+          - "(v6prefixes | to_int) > (prefix_limit | to_int)"
+        quiet: false
+      when: address_family == 'ipv6' and vrf_name == 'default'
+
+    - name: Updating BGP peer configuration by merging with the existing running configuration
       cisco.iosxr.iosxr_bgp_neighbor_address_family:
         state: merged
         config:
@@ -61,7 +83,7 @@
           neighbors:
             - neighbor_address: "{{ bgp_neighbor }}"
               address_family:
-                - afi: ipv4
+                - afi: "{{ address_family }}"
                   safi: unicast
                   maximum_prefix:
                     max_limit: "{{ v4prefixes }}"
@@ -71,7 +93,7 @@
     - name: Clear the BGP Neighbor Session
       cisco.iosxr.iosxr_command:
         commands: clear bgp {{ bgp_neighbor }} graceful
-      when: ansible_network_os == 'cisco.iosxr.iosxr'
+      when: ansible_network_os == 'cisco.iosxr.iosxr' and vrf_name == 'default'
 
     - name: Wait for the BGP Session Reset
       ansible.builtin.pause:
@@ -82,13 +104,13 @@
       cisco.iosxr.iosxr_command:
         commands: show bgp neighbor {{ bgp_neighbor }} | utility egrep "BGP state"
       register: bgp_output
-      when: ansible_network_os == 'cisco.iosxr.iosxr'
+      when: ansible_network_os == 'cisco.iosxr.iosxr' and vrf_name == 'default'
 
     - name: Display BGP Neighbor State
       debug:
         msg: "{{ bgp_output.stdout_lines }}"
 
-    - name: Cisco Webex Teams Message to a Room if BGP is Established
+    - name: Cisco Webex Teams - Markdown Message to a Room if IPv4 BGP is Established
       community.general.cisco_webex:
         recipient_type: roomId
         recipient_id: "{{ room_id }}"
@@ -98,9 +120,25 @@
           **Device:** {{ target_host }} 
           **BGP Neighbor (UP):** {{ bgp_neighbor }} ✅
           **Description:** {{ neighbor_desc }}
-          **Remote ASN:** {{ bgp_remote_asn }} 
-          **IPv4 Prefix Limit:** {{ v4prefixes }}
-      when: bgp_output.stdout | regex_search('BGP state = Established')
+          **Remote ASN:** {{ bgp_remote_asn }}
+          **Address Family:** {{ address_family }}
+          **Prefix Limit:** {{ v4prefixes }}
+      when: bgp_output.stdout | regex_search('BGP state = Established') and address_family == 'ipv4'
+
+    - name: Cisco Webex Teams - Markdown Message to a Room if IPv6 BGP is Established
+      community.general.cisco_webex:
+        recipient_type: roomId
+        recipient_id: "{{ room_id }}"
+        msg_type: markdown
+        personal_token: "{{ token }}"
+        msg: |
+          **Device:** {{ target_host }} 
+          **BGP Neighbor (UP):** {{ bgp_neighbor }} ✅
+          **Description:** {{ neighbor_desc }}
+          **Remote ASN:** {{ bgp_remote_asn }}
+          **Address Family:** {{ address_family }}
+          **Prefix Limit:** {{ v6prefixes }}
+      when: bgp_output.stdout | regex_search('BGP state = Established') and address_family == 'ipv6'
 
 # # ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
 # # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=14570'

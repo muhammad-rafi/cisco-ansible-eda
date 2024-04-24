@@ -30,6 +30,11 @@
       action:
         debug:
           msg: |
-            BGP neighbor {{ event.body.tags.neighbor_address }} on {{ event.body.tags.source }} 
-            with Local AS{{ event.body.fields.local_as }} and Remote AS{{ event.body.fields.remote_as_number }} 
-            is down due to {{ event.body.fields.reset_reason }} 
+            **Device: {{ event.body.tags.source }} 
+            **BGP Neighbor: {{ event.body.tags.neighbor_address }}
+            **Description: {{ event.body.fields.description | default('N/A') }}
+            **Remote ASN: {{ event.body.fields.remote_as_number }}
+            **Address Family: {{ event.body.fields['af_data/af_name']}}
+            **Prefix Limit: {{ event.body.fields['af_data/max_prefix_limit'] }}
+            **Prefix Limit Threshold: {{ event.body.fields['af_data/max_prefix_threshold_percent'] }}
+            **Reason: {{ event.body.fields.reset_reason }}

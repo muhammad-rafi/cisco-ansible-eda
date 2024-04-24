@@ -22,6 +22,10 @@
           - "BGP Neighbor Address: {{ bgp_neighbor }}"
           - "Local AS Number: {{ bgp_local_asn }}"
           - "Remote AS Number: {{ bgp_remote_asn }}"
+          - "Address Family: {{ ansible_eda.event.body.fields['af_data/af_name'] }}"
+          - "Prefix Limit: {{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] }}"
+          - "Prefix Limit Threshold: {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] }}"
+          - "Reason for BGP Down: {{ ansible_eda.event.body.fields.reset_reason }}"
 
     - name: Cisco Webex Teams - Markdown Message to a Room for BGP State
       community.general.cisco_webex:
@@ -39,15 +43,19 @@
           **Prefix Limit Threshold:** {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] | default('N/A') }}
           **Reason:** {{ ansible_eda.event.body.fields.reset_reason | default('N/A') }}
 
-    - name: Run the Python script to fetch prefixes from PeeringDB
-      ansible.builtin.shell:
-        cmd: "python {{ script_dir }}/peerdb_py.py {{ bgp_remote_asn }} {{ peerdb_api_key }}"
+    - name: Query PeeringDB for the Remote BGP ASN Prefix Limits
+      ansible.builtin.uri:
+        url: "https://www.peeringdb.com/api/net?asn={{ bgp_remote_asn }}&key={{ peerdb_api_key }}"
+        method: GET
+        body_format: "json"
+        return_content: false
       register: peeringdb_result
+      failed_when: peeringdb_result.status != 200
 
     - name: set facts for the playbook 
       ansible.builtin.set_fact:
-        v4prefixes: "{{ peeringdb_result.stdout_lines[0] }}"
-        v6prefixes: "{{ peeringdb_result.stdout_lines[1] }}"
+        v4prefixes: "{{ peeringdb_result.json.data[0].info_prefixes4 | default('N/A') }}"
+        v6prefixes: "{{ peeringdb_result.json.data[0].info_prefixes6 | default('N/A') }}"
         address_family: "{{ ansible_eda.event.body.fields['af_data/af_name'] | default('N/A') }}"
         prefix_limit: "{{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] }}"
         neighbor_desc: "{{ ansible_eda.event.body.fields.description | default('N/A') }}"

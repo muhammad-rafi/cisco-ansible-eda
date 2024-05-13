@@ -304,6 +304,20 @@ drwx------. 2 root root 24 Mar 28 00:05 ansible.eda-1.4.5.info
 [root@devnetbox ~]# 
 ```
 
+#### Install Ansible Galaxy Collection for ServiceNow (Optional)
+`Note:` If you like to integrate Ansible with ServiceNow, you can use this ServiceNow Ansible Galaxy collection.
+
+```shell
+(ansible_latest) [root@devnetbox ~]# ansible-galaxy collection install servicenow.itsm
+Starting galaxy collection install process
+Process install dependency map
+Starting collection install process
+Downloading https://galaxy.ansible.com/api/v3/plugin/ansible/content/published/collections/artifacts/servicenow-itsm-2.5.0.tar.gz to /root/.ansible/tmp/ansible-local-2950139m4v9qrg8/tmpxmrwtccw/servicenow-itsm-2.5.0-zv1r49dc
+Installing 'servicenow.itsm:2.5.0' to '/root/.ansible/collections/ansible_collections/servicenow/itsm'
+servicenow.itsm:2.5.0 was installed successfully
+(ansible_latest) [root@devnetbox ~]# 
+```
+
 #### Generate SSH Keys (Optional)
 `Note:` This is only required if you like to use SSH Keys to pull githib repo without using password. You need to add your public key to Github in the Settings.
 

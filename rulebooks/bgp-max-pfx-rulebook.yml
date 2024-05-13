@@ -24,6 +24,7 @@
             bgp_remote_asn: "{{ event.body.fields.remote_as_number }}"
             bgp_local_asn: "{{ event.body.fields.local_as }}"
           verbosity: 1
+          copy_files: True
 
     - name: Reason for BGP State Down
       condition: events.body.fields.open_check_error_code == "neighbor-down"

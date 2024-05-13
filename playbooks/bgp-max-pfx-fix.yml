@@ -13,6 +13,9 @@
     room_id: "{{ lookup('env', 'ROOM_ID') }}" # make sure you export ROOM_ID environmental variable
     token: "{{ lookup('env', 'WEBEX_TOKEN') }}" # make sure you export WEBEX_TOKEN environmental variable
     peerdb_api_key: "{{ lookup('env', 'PEERDB_API_KEY') }}" # make sure you export PEERDB_API_KEY environmental variable
+    snow_instance: "{{ lookup('env', 'SN_INSTANCE') }}"
+    snow_username: "{{ lookup('env', 'SN_USERNAME') }}"
+    snow_password: "{{ lookup('env', 'SN_PASSWORD') }}"
 
   tasks:
     - name: Display extra vars coming from a rulebook
@@ -83,6 +86,42 @@
         quiet: false
       when: address_family == 'ipv6' and vrf_name == 'default'
 
+    - name: Create change request
+      servicenow.itsm.change_request:
+        instance:
+          host: "https://{{ snow_instance }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+        template: "BGP Max Prefix Limit Update - 3"
+        type: standard
+        state: scheduled # or new
+        assignment_group: Network
+        category: "Network"
+        short_description: Update BGP Prefix Limit and Clear BGP Session
+        other:
+          # start_date: "2024-05-07 15:00:00"
+          # end_date: "2024-05-07 16:00:00"
+          cmdb_ci: "{{ target_host }}"
+          business_service: "IT Services"
+          justification: "To bring the BGP session up that is down due to prefix limit exceeded"
+          risk_impact_analysis: "No risk involved"
+          # assigned_to: "Muhammad Rafi"
+      register: change_created
+
+    - name: Set fact for the SNOW change number 
+      ansible.builtin.set_fact:
+        change_number: "{{ change_created.diff.after.number }}"
+
+    - name: Mark change request as in progress/implement
+      servicenow.itsm.change_request:
+        instance:
+          host: "https://{{ snow_instance }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+        number: "{{ change_number }}"
+        state: implement
+      register: change_implement
+
     - name: Updating BGP peer configuration by merging with the existing running configuration
       cisco.iosxr.iosxr_bgp_neighbor_address_family:
         state: merged
@@ -107,6 +146,16 @@
       ansible.builtin.pause:
         prompt: "Waiting 30 sec for BGP reset"
         seconds: 30
+
+    - name: Mark change request as in review
+      servicenow.itsm.change_request:
+        instance:
+          host: "https://{{ snow_instance }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+        number: "{{ change_number }}"
+        state: review
+      register: change_review
 
     - name: Get the BGP Neighbor State
       cisco.iosxr.iosxr_command:
@@ -148,5 +197,25 @@
           **Prefix Limit:** {{ v6prefixes }}
       when: bgp_output.stdout | regex_search('BGP state = Established') and address_family == 'ipv6'
 
+    - name: Close the change request
+      servicenow.itsm.change_request:
+        instance:
+          host: "https://{{ snow_instance }}"
+          username: "{{ snow_username }}"
+          password: "{{ snow_password }}"
+        number: "{{ change_number }}"
+        close_code: "successful"
+        close_notes: "change completed and closed with ansible"
+        state: closed
+        # other:
+        #   work_start: "05-04-2024 11:00:00"
+        #   work_end: "05-04-2024 11:36:00"
+        #   work_notes: "some notes"
+      register: closed_change
+
+    - name: Debug the output for change implement update
+      ansible.builtin.debug:
+        msg: "{{ closed_change }}"
+        
 # # ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
 # # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=14570'

@@ -9,7 +9,6 @@
     - community.general.cisco_webex
   
   vars:
-    script_dir: '~/cisco-ansible-eda/scripts' # select correct path in your system
     room_id: "{{ lookup('env', 'ROOM_ID') }}" # make sure you export ROOM_ID environmental variable
     token: "{{ lookup('env', 'WEBEX_TOKEN') }}" # make sure you export WEBEX_TOKEN environmental variable
     peerdb_api_key: "{{ lookup('env', 'PEERDB_API_KEY') }}" # make sure you export PEERDB_API_KEY environmental variable
@@ -213,9 +212,3 @@
         #   work_notes: "some notes"
       register: closed_change
 
-    - name: Debug the output for change implement update
-      ansible.builtin.debug:
-        msg: "{{ closed_change }}"
-        
-# # ansible-playbook playbooks/bgp-max-pfx-fix.yml --check
-# # ansible-playbook playbooks/bgp-max-pfx-fix.yml -e 'bgp_remote_asn=14570'

@@ -21,7 +21,7 @@
     #       # var_root: i
 
     - name: Display Kafka Logs and Run Action Playbook
-      condition: events.body.fields.host_name == "cml-dist-rtr01" and events.body.fields.if_name == "Loopback10" and events.body.fields.new_state == "interface-notif-state-down"
+      condition: events.body.fields.host_name == "cml-dist-rtr01" and events.body.fields.if_name == "Loopback0" and events.body.fields.new_state == "interface-notif-state-down"
       action:
         run_playbook:
           name: playbooks/xe-interface-noshut.yml

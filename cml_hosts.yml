@@ -6,8 +6,10 @@ all:
           ansible_host: 127.0.0.1
     cml_devices:
       vars:
-        ansible_libssh_user: "{{ lookup('env', 'CML_USERNAME') }}"
-        ansible_libssh_pass: "{{ lookup('env', 'CML_PASSWORD') }}"
+        # ansible_libssh_user: "{{ lookup('env', 'CML_USERNAME') }}"
+        # ansible_libssh_pass: "{{ lookup('env', 'CML_PASSWORD') }}"
+        ansible_libssh_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+        ansible_libssh_pass: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets:iosxr_password token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
       children:
         cml_ios:
           hosts:

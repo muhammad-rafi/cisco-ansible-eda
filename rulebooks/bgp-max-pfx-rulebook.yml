@@ -17,7 +17,8 @@
       condition: events.body.fields.is_neighbor_max_prefix_shutdown == "true" and events.body.fields.reset_reason == "max-prefix-exceeded"
       action:
         run_playbook:
-          name: playbooks/bgp-max-pfx-fix.yml
+          # name: playbooks/bgp-max-pfx-fix.yml
+          name: playbooks/bgp-max-pfx-vault.yml
           extra_vars:
             target_host: "{{ event.body.tags.source }}"
             bgp_neighbor: "{{ event.body.tags.neighbor_address }}"

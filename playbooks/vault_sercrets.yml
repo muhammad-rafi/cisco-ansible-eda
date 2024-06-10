@@ -1,0 +1,90 @@
+---
+- name: Display Messages Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+    - community.hashi_vault
+  vars:
+    - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
+    - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+    - snow_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/snow_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - webex_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/webex_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - peeringdb_secret: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/peeringdb_secret token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - device_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - iosxr_username:  "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+
+  # https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/index.html
+
+  # export VAULT_TOKEN="<your-auth-token>"
+  # export VAULT_ADDR="https://devnetbox:8200"
+  # export VAULT_SKIP_VERIFY=true
+
+  tasks:
+    # - name: Read the latest version of a kv2 secret from Vault via the remote host with userpass auth
+    #   community.hashi_vault.vault_kv2_get:
+    #     url: https://devnetbox:8200
+    #     path: hello
+    #     auth_method: userpass
+    #     username: user
+    #     password: '{{ passwd }}'
+    #   register: response
+    #   # equivalent API path is secret/data/hello
+
+    # ------------------------------------------------------------------------------------------------------- #
+
+    # - name: Read the latest version of a kv2 secret from Vault via the remote host with token auth
+    #   community.hashi_vault.vault_kv2_get:
+    #     url: "{{ vault_addr }}"
+    #     namespace: admin
+    #     engine_mount_point: cml_secrets
+    #     path: snow_secrets
+    #     auth_method: token
+    #     token: "{{ vault_token }}"
+    #     validate_certs: false
+    #   register: response
+    #   # equivalent API path is cml_secrets/data/snow_secrets
+
+    # - name: Display the results
+    #   ansible.builtin.debug:
+    #     msg:
+    #       - "Secret: {{ response.secret }}"
+    #       - "Data: {{ response.data }} (contains secret data & metadata in kv2)"
+    #       - "Metadata: {{ response.metadata }}"
+    #       - "Full response: {{ response.raw }}"
+    #       - "Value of key 'password' in the secret: {{ response.secret.snow_username }}"
+
+    # ------------------------------------------------------------------------------------------------------- #
+
+    # - name: Read the latest version of a kv2 secret from Vault via the ansible builtin url module
+    #   ansible.builtin.uri:
+    #     url: "{{ vault_addr }}/v1/cml_secrets/data/snow_secrets"
+    #     method: GET
+    #     headers:
+    #       X-Vault-Token: "{{ vault_token }}"
+    #     body_format: json
+    #     body: '{"data": {"key": "value"}}'
+    #     return_content: true
+    #     validate_certs: false
+    #   register: vault_response
+    #   failed_when: vault_response.status != 200
+
+    # - name: Display Vault response
+    #   ansible.builtin.debug:
+    #     msg:
+    #       - "snow_username: {{ vault_response.json.data.data.snow_username }}"
+    #       - "snow_password: {{ vault_response.json.data.data.snow_password }}"
+
+
+    - name: Display the secrets variable from the Hashicorp Vault 
+      ansible.builtin.debug:
+        msg:
+          - "snow_instance: {{ snow_secrets.snow_instance }}"
+          - "snow_username: {{ snow_secrets.snow_username }}"
+          - "snow_password: {{ snow_secrets.snow_password }}"
+          - "webex_token: {{ webex_secrets.webex_token }}"
+          - "room_id: {{ webex_secrets.bgp_room_id }}"
+          - "peeringdb_api_key: {{ peeringdb_secret.peeringdb_key }}"
+          - "username: {{ device_secrets.iosxr_username }}"
+          - "password: {{ device_secrets.iosxr_password }}"
+          - "iosxr_username: {{ iosxr_username }}"

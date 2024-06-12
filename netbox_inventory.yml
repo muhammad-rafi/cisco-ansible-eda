@@ -1,0 +1,10 @@
+---
+plugin: netbox.netbox.nb_inventory
+# api_endpoint: 'http://127.0.0.1:8000' # or export NETBOX_API="http://127.0.0.1:8000"
+# token: yourT0ken # or export NETBOX_TOKEN="yourT0ken"
+validate_certs: false
+config_context: false
+group_by:
+  - sites
+compose:
+  ansible_network_os: platform.slug

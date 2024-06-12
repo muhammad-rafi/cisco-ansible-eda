@@ -11,8 +11,8 @@
     - snow_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/snow_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
     - webex_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/webex_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
     - peeringdb_secret: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/peeringdb_secret token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
-    - device_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
-    - iosxr_username:  "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_iosxr_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - device_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
+    - iosxr_username:  "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }} verify=false') }}"
 
   # https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/index.html
 

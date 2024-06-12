@@ -1,0 +1,26 @@
+---
+- name: Netbox Playbook
+  hosts: cml-core-rtr01
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  collections:
+    - netbox.netbox
+    - community.hashi_vault
+
+  vars:
+    - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
+    - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+    - ansible_libssh_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }}') }}"
+    - ansible_libssh_pass: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_password token={{ vault_token }} url={{ vault_addr }}') }}"
+
+  tasks:
+    - name: run show running-config on remote devices
+      cisco.iosxr.iosxr_command:
+        commands: "show ip interface brief"
+      register: output
+
+    - name: Display output
+      ansible.builtin.debug:
+        msg: "{{ output }}"
+
+# ansible-playbook -i netbox_inventory.yml playbooks/netbox_pb.yml -u admin -k

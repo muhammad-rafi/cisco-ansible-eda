@@ -16,11 +16,11 @@
   tasks:
     - name: run show running-config on remote devices
       cisco.iosxr.iosxr_command:
-        commands: "show ip interface brief"
+        commands: "show running-config"
       register: output
 
     - name: Display output
       ansible.builtin.debug:
-        msg: "{{ output }}"
+        msg: "{{ output.stdout }}"
 
 # ansible-playbook -i netbox_inventory.yml playbooks/netbox_pb.yml -u admin -k

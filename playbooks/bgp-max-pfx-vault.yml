@@ -8,6 +8,7 @@
     - cisco.iosxr
     - community.general.cisco_webex
     - community.hashi_vault
+    - netbox.netbox
   
   vars:
     - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"

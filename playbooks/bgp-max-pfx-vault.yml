@@ -13,6 +13,8 @@
   vars:
     - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
     - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+    - ansible_libssh_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }}') }}"
+    - ansible_libssh_pass: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_password token={{ vault_token }} url={{ vault_addr }}') }}"
     - room_id: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/webex_secrets:bgp_room_id token={{ vault_token }} url={{ vault_addr }}') }}"
     - token: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/webex_secrets:webex_token token={{ vault_token }} url={{ vault_addr }}') }}"
     - peerdb_api_key: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/peeringdb_secret:peeringdb_key token={{ vault_token }} url={{ vault_addr }}') }}"

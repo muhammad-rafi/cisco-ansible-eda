@@ -7,4 +7,4 @@ config_context: false
 group_by:
   - sites
 compose:
-  ansible_network_os: platform.slug
+  ansible_network_os: platform.name

@@ -1,3 +1,10 @@
 ---
 # ansible_connection: ansible.netcommon.network_cli
 # ansible_port: 22
+# ansible_network_os: iosxr
+# vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
+# vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+# ansible_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }}') }}"
+# ansible_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_password token={{ vault_token }} url={{ vault_addr }}') }}"
+# ansible_libssh_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_username token={{ vault_token }} url={{ vault_addr }}') }}"
+# ansible_libssh_pass: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/cml_devices_secrets:iosxr_password token={{ vault_token }} url={{ vault_addr }}') }}"

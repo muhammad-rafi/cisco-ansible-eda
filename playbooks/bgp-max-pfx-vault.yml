@@ -21,7 +21,10 @@
     - snow_instance: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/snow_secrets:snow_instance token={{ vault_token }} url={{ vault_addr }}') }}"
     - snow_username: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/snow_secrets:snow_username token={{ vault_token }} url={{ vault_addr }}') }}"
     - snow_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/snow_secrets:snow_password token={{ vault_token }} url={{ vault_addr }}') }}"
-    - test: false
+    - nso_url: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_url token={{ vault_token }} url={{ vault_addr }}') }}"
+    - nso_username: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_username token={{ vault_token }} url={{ vault_addr }}') }}"
+    - nso_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_password token={{ vault_token }} url={{ vault_addr }}') }}"
+    - test: true
 
   tasks:
     # - name: Disable InsecureRequestWarning
@@ -41,6 +44,9 @@
           - "webex_token: {{ token }}"
           - "room_id: {{ webex_secrets.bgp_room_id }}"
           - "peeringdb_api_key: {{ peerdb_api_key }}"
+          - "nso_url: {{ nso_url }}"
+          - "nso_username: {{ nso_username }}"
+          - "nso_password: {{ nso_password }}"
       when: test|bool == true
 
     - name: Display extra vars coming from a rulebook
@@ -147,19 +153,44 @@
         state: implement
       register: change_implement
 
-    - name: Updating BGP peer configuration by merging with the existing running configuration
-      cisco.iosxr.iosxr_bgp_neighbor_address_family:
-        state: merged
-        config:
-          as_number: "{{ bgp_local_asn }}"
-          neighbors:
-            - neighbor_address: "{{ bgp_neighbor }}"
-              address_family:
-                - afi: "{{ address_family }}"
-                  safi: unicast
-                  maximum_prefix:
-                    max_limit: "{{ v4prefixes }}"
-                    threshold_value: 75
+    # - name: Updating BGP peer configuration by merging with the existing running configuration
+    #   cisco.iosxr.iosxr_bgp_neighbor_address_family:
+    #     state: merged
+    #     config:
+    #       as_number: "{{ bgp_local_asn }}"
+    #       neighbors:
+    #         - neighbor_address: "{{ bgp_neighbor }}"
+    #           address_family:
+    #             - afi: "{{ address_family }}"
+    #               safi: unicast
+    #               maximum_prefix:
+    #                 max_limit: "{{ v4prefixes }}"
+    #                 threshold_value: 75
+    #   when: ansible_network_os == 'cisco.iosxr.iosxr'
+
+    - name: CONFIGURE/UPDATE BGP MAX PREFIX LIST ON IOS-XR DEVICE USING NSO
+      cisco.nso.nso_config:
+        url: "{{ nso_url }}/jsonrpc"
+        username: "{{ nso_username }}"
+        password: "{{ nso_password }}"
+        validate_certs: false
+        data:
+          tailf-ncs:devices:
+            device:
+            - name: "{{ target_host }}"
+              config:
+                tailf-ned-cisco-ios-xr:router:
+                  bgp:
+                    bgp-no-instance:
+                      - id: "{{ bgp_local_asn }}"
+                        neighbor:
+                          - id: "{{ bgp_neighbor }}"
+                            address-family:
+                              ipv4:
+                                unicast:
+                                  maximum-prefix:
+                                    max-prefix-limit: "{{ v4prefixes }}"
+                                    threshold: 75
       when: ansible_network_os == 'cisco.iosxr.iosxr'
 
     - name: Clear the BGP Neighbor Session

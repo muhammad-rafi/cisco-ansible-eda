@@ -1,0 +1,45 @@
+---
+- name: BGP Max Prefixes Limit Fix with Cisco NSO
+  hosts: cml-core-rtr02
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  collections:
+    - ansible.netcommon
+    - cisco.nso
+
+  # ansible-playbook -i cml_hosts.yml playbooks/bgp-config-nso.yml
+  
+  vars:
+    nso_url: http://10.250.78.80:8081
+    nso_username: admin
+    nso_password: admin
+
+  tasks:
+    - name: CONFIGURE BGP MAX PREFIX LIST ON IOS-XR DEVICE
+      cisco.nso.nso_config:
+        url: "{{ nso_url }}/jsonrpc"
+        username: "{{ nso_username }}"
+        password: "{{ nso_password }}"
+        validate_certs: false
+        data:
+          tailf-ncs:devices:
+            device:
+            - name: cml-core-rtr02
+              config:
+                tailf-ned-cisco-ios-xr:router:
+                  bgp:
+                    bgp-no-instance:
+                      - id: 65001
+                        neighbor:
+                          - id: 192.168.5.14
+                            address-family:
+                              ipv4:
+                                unicast:
+                                  maximum-prefix:
+                                    max-prefix-limit: 10
+                                    threshold: 75
+      register: config_output
+
+    - name: Display output on the terminal
+      ansible.builtin.debug:
+        msg: "{{ config_output }}"

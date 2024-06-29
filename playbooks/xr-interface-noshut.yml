@@ -1,0 +1,39 @@
+---
+- name: Playbook To Enable Disable Cisco XR Interfaces
+  hosts: "{{ target_host }}"
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+
+  vars:
+    - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
+    - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+    
+  tasks:
+    - name: Displaying the Rulebook Variables from the Rulebook
+      ansible.builtin.debug:
+        msg: |
+          Impacted Device: {{ target_host }} # or {{ ansible_eda.event.body.tags.source }}
+          Interface: {{ interface }} # or {{ ansible_eda.event.body.tags.interface_name }}
+          Status: {{ ansible_eda.event.body.fields.state }}
+
+    - name: Enabling the {{ interface }} on {{ target_host }}
+      cisco.iosxr.iosxr_config:
+        lines:
+          - no shutdown
+        parents: "interface {{ interface }}"
+
+    - name: Getting the {{ interface }} status
+      cisco.iosxr.iosxr_command:
+        commands: show interface {{ interface }}
+      register: output
+
+    - name: Check the running-config against master config
+      cisco.iosxr.iosxr_command:
+        diff_against: startup
+      register: diff_output
+
+    - name: Display Config Diff 
+      ansible.builtin.debug:
+        msg: "{{ diff_output }}"
+
+

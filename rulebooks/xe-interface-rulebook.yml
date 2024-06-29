@@ -1,5 +1,5 @@
 ---
-- name: Listen Kafka Events for Inteface Down
+- name: Listen Kafka Events for Cisco XE Interfaces Down
   hosts: all
   sources:
   - ansible.eda.kafka:

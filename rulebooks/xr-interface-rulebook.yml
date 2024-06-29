@@ -1,0 +1,54 @@
+---
+- name: Listen Kafka Events for Cisco XR Interfaces Down
+  hosts: all
+  sources:
+  - ansible.eda.kafka:
+      host: devnetbox # localhost if Kafka running locally
+      port: 9092
+      topic: cisco-telemetry
+      group_id: ansible-eda
+      offset: latest # [latest, earliest]
+      verify_mode: CERT_NONE
+  rules:
+    # - name: Print Events on the Terminal
+    #   condition: events.body is defined
+    #   action:
+    #     print_event:
+    #       pretty: true
+    #       # var_root: i
+
+    - name: Display Kafka Logs and Run Action Playbook
+      condition: event.body.tags.source  == "cml-core-rtr02" and event.body.tags.interface_name  == "GigabitEthernet0/0/0/4" and event.body.fields.state == "im-state-admin-down"
+      action:
+        run_playbook:
+          name: playbooks/xr-interface-noshut.yml
+          extra_vars:
+            target_host: "{{ event.body.tags.source }}"
+            interface: "{{ event.body.tags.interface_name }}"
+          verbosity: 1
+          set_facts: true
+
+    # - name: Set Fact from Rulebook to pass to Playbook
+    #   condition: events.body.fields.new_state == "im-state-admin-down"
+    #   action:
+    #     set_fact:
+    #       # ruleset: Test Ruleset1
+    #       fact: 
+    #         interface_status: "{{ event.body.fields.new_state }}"
+
+    # - name: Parsed Hostname and Interface Name
+    #   # condition: events.body.fields is defined
+    #   # condition: event.body.tags.source  == "cml-core-rtr02"
+    #   condition: event.body.tags.source  == "cml-core-rtr02" and event.body.tags.interface_name  == "GigabitEthernet0/0/0/4" and event.body.fields.state == "im-state-admin-down"
+    #   action:
+    #     debug:
+    #       msg:
+    #         - "target host is {{ event.body.tags.source }}"
+    #         - "interface is {{ event.body.tags.interface_name }}"
+    #         - "interface_status is {{ event.body.fields.state }}"
+
+# To run this rulebook
+#  ansible-rulebook --rulebook rulebooks/xr-interface-rulebook.yml -i cml_hosts.yml --verbose
+#  ansible-rulebook -r rulebooks/xr-interface-rulebook.yml -i cml_hosts.yml -v
+#  ansible-rulebook --rulebook rulebooks/xr-interface-rulebook.yml -i cml_hosts.yml --verbose --print-events
+

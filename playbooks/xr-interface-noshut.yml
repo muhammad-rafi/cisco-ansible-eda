@@ -7,7 +7,7 @@
   vars:
     - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
     - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
-    
+
   tasks:
     - name: Displaying the Rulebook Variables from the Rulebook
       ansible.builtin.debug:
@@ -24,16 +24,8 @@
 
     - name: Getting the {{ interface }} status
       cisco.iosxr.iosxr_command:
-        commands: show interface {{ interface }}
+        commands: show interface {{ interface }} | i {{ interface }}
       register: output
 
-    - name: Check the running-config against master config
-      cisco.iosxr.iosxr_command:
-        diff_against: startup
-      register: diff_output
-
-    - name: Display Config Diff 
-      ansible.builtin.debug:
-        msg: "{{ diff_output }}"
 
 

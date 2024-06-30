@@ -43,7 +43,7 @@
           - "snow_username: {{ snow_username }}"
           - "snow_password: {{ snow_password }}"
           - "webex_token: {{ token }}"
-          - "room_id: {{ bgp_room_id }}"
+          - "room_id: {{ room_id }}"
           - "peeringdb_api_key: {{ peerdb_api_key }}"
           - "nso_url: {{ nso_url }}"
           - "nso_username: {{ nso_username }}"

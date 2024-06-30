@@ -25,7 +25,7 @@
     - nso_url: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_url token={{ vault_token }} url={{ vault_addr }}') }}"
     - nso_username: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_username token={{ vault_token }} url={{ vault_addr }}') }}"
     - nso_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=cml_secrets/data/nso_secrets:nso_password token={{ vault_token }} url={{ vault_addr }}') }}"
-    - test: true
+    - test: false
 
   tasks:
     # - name: Disable InsecureRequestWarning
@@ -61,6 +61,22 @@
           - "Prefix Limit: {{ ansible_eda.event.body.fields['af_data/max_prefix_limit'] }}"
           - "Prefix Limit Threshold: {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] }}"
           - "Reason for BGP Down: {{ ansible_eda.event.body.fields.reset_reason }}"
+
+    - name: Get the BGP Neighbor Current State
+      cisco.iosxr.iosxr_command:
+        commands: show bgp neighbor {{ bgp_neighbor }} detail | i BGP state
+      register: bgp_state_output
+
+    - name: Extract BGP state
+      set_fact:
+        bgp_state: "{{ bgp_state_output.stdout[0] | regex_search('Established') }}"
+
+    - name: Assert BGP state is NOT Established
+      assert:
+        that:
+          - bgp_state != 'Established'
+        fail_msg: "BGP state is already Established. Current state: {{ bgp_state }}"
+        success_msg: "BGP state is not Established. Proceeding with the playbook"
 
     - name: Cisco Webex Teams - Markdown Message to a Room for BGP State
       community.general.cisco_webex:

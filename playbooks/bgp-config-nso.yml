@@ -43,3 +43,34 @@
     - name: Display output on the terminal
       ansible.builtin.debug:
         msg: "{{ config_output }}"
+
+    # - name: Get the BGP Neighbor State
+    #   cisco.iosxr.iosxr_command:
+    #     commands: show bgp neighbor 192.168.5.14 detail | i BGP state
+    #   register: bgp_output
+
+    # - name: Display BGP Neighbor State
+    #   debug:
+    #     msg: "{{ bgp_output.stdout[0] }}"
+
+    # - name: Extract BGP state
+    #   set_fact:
+    #     # bgp_state: "{{ bgp_output.stdout[0] | regex_search('BGP state = (\\w+)', '\\1') }}"
+    #     bgp_state: "{{ bgp_output.stdout[0] | regex_search('Established') }}"
+
+    # - name: Display BGP Neighbor State after set fact 
+    #   debug:
+    #     msg: "{{ bgp_state }}"
+
+    # - name: Assert BGP state is Established
+    #   assert:
+    #     that:
+    #       - bgp_state != 'Established'
+    #     fail_msg: "BGP state is already Established. Current state: {{ bgp_state }}"
+    #     success_msg: "BGP state is not Established. Proceeding with the playbook"
+
+    # - name: Clear BGP neighbor if state is not Established
+    #   cisco.iosxr.iosxr_command:
+    #     commands:
+    #       - clear bgp neighbor 192.168.5.14
+    #   when: bgp_state_assert.failed == false

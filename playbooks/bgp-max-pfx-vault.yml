@@ -9,6 +9,7 @@
     - community.general.cisco_webex
     - community.hashi_vault
     - netbox.netbox
+    - cisco.nso
   
   vars:
     - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
@@ -42,7 +43,7 @@
           - "snow_username: {{ snow_username }}"
           - "snow_password: {{ snow_password }}"
           - "webex_token: {{ token }}"
-          - "room_id: {{ webex_secrets.bgp_room_id }}"
+          - "room_id: {{ bgp_room_id }}"
           - "peeringdb_api_key: {{ peerdb_api_key }}"
           - "nso_url: {{ nso_url }}"
           - "nso_username: {{ nso_username }}"

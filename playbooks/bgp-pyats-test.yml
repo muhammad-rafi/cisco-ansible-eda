@@ -1,0 +1,25 @@
+---
+- name: Check BGP Neighbors
+  hosts: cml-core-rtr02
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  collections:
+    - ansible.netcommon
+  roles:
+    - ansible-pyats
+
+  tasks:
+    - pyats_parse_command:
+        command: show bgp neighbors 192.168.5.14
+      register: output
+
+    # - ansible.builtin.debug:
+    #     var: output.structured.instance.all.vrf.default.neighbor['192.168.5.14']['session_state']
+
+    - name: Set Fact for BGP Neighbor State
+      ansible.builtin.set_fact:
+        bgp_state: "{{ output.structured.instance.all.vrf.default.neighbor['192.168.5.14']['session_state'] }}"
+
+    - name: Display BGP Neighbor State 
+      ansible.builtin.debug:
+        msg: "{{ bgp_state }}"

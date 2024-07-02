@@ -10,7 +10,9 @@
     - community.hashi_vault
     - netbox.netbox
     - cisco.nso
-  
+  # roles:
+  #   - ansible-pyats
+
   vars:
     - vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"
     - vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
@@ -62,13 +64,31 @@
           - "Prefix Limit Threshold: {{ ansible_eda.event.body.fields['af_data/max_prefix_threshold_percent'] }}"
           - "Reason for BGP Down: {{ ansible_eda.event.body.fields.reset_reason }}"
 
+    # ----------------------------------------- TESTING SECTION FOR PYATS ----------------------------------------- #
+    # - name: Get the BGP Neighbor Current State
+    #   pyats_parse_command:
+    #     command: show bgp neighbors {{ bgp_neighbor }}
+    #   register: bgp_state_output
+
+    # - name: Set Fact for BGP Neighbor State
+    #   ansible.builtin.set_fact:
+    #     bgp_state: "{{ bgp_state_output.structured.instance.all.vrf.default.neighbor['{{ bgp_neighbor }}']['session_state'] }}"
+
+    # - name: Assert BGP state is NOT Established
+    #   assert:
+    #     that:
+    #       - bgp_state != 'established'
+    #     fail_msg: "BGP state is already Established. Current state: {{ bgp_state }}"
+    #     success_msg: "BGP state is not Established. Proceeding with the playbook"
+    # ----------------------------------------- TESTING SECTION FOR PYATS ----------------------------------------- #
+
     - name: Get the BGP Neighbor Current State
       cisco.iosxr.iosxr_command:
         commands: show bgp neighbor {{ bgp_neighbor }} detail | i BGP state
       register: bgp_state_output
 
     - name: Extract BGP state
-      set_fact:
+      ansible.builtin.set_fact:
         bgp_state: "{{ bgp_state_output.stdout[0] | regex_search('Established') }}"
 
     - name: Assert BGP state is NOT Established

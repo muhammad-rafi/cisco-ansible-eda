@@ -8,3 +8,5 @@ group_by:
   - sites
 compose:
   ansible_network_os: platform.name
+
+# https://docs.ansible.com/ansible/latest/collections/netbox/netbox/nb_inventory_inventory.html

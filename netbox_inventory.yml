@@ -2,6 +2,8 @@
 plugin: netbox.netbox.nb_inventory
 # api_endpoint: 'http://127.0.0.1:8000' # or export NETBOX_API="http://127.0.0.1:8000"
 # token: yourT0ken # or export NETBOX_TOKEN="yourT0ken"
+api_endpoint: "{{ netbox_api_endpoint }}"
+token: "{{ netbox_token }}"
 validate_certs: false
 config_context: false
 group_by:
@@ -10,3 +12,4 @@ compose:
   ansible_network_os: platform.name
 
 # https://docs.ansible.com/ansible/latest/collections/netbox/netbox/nb_inventory_inventory.html
+# ansible-inventory --list -i netbox_inventory.yml --yaml

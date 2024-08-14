@@ -290,6 +290,8 @@
           **Remote ASN:** {{ bgp_remote_asn }}
           **Address Family:** {{ address_family }}
           **Prefix Limit:** {{ v6prefixes }}
+
+          Issue has been fixed with the changed: {{ change_number }}
       when: bgp_output.stdout | regex_search('BGP state = Established') and address_family == 'ipv6'
 
     - name: Close the change request

@@ -275,6 +275,8 @@
           **Remote ASN:** {{ bgp_remote_asn }}
           **Address Family:** {{ address_family }}
           **Prefix Limit:** {{ v4prefixes }}
+
+          Issue has been fixed with the change: {{ change_number }}
       when: bgp_output.stdout | regex_search('BGP state = Established') and address_family == 'ipv4'
 
     - name: Cisco Webex Teams - Markdown Message to a Room if IPv6 BGP is Established

@@ -1,7 +1,7 @@
 ---
 # ansible-rulebook --rulebook rulebooks/bgp-max-pfx-rulebook.yml -i cml_hosts.yml --verbose
 # ansible-rulebook --rulebook rulebooks/bgp-max-pfx-rulebook.yml -i netbox_inventory.yml --verbose
-# ansible-rulebook --rulebook rulebooks/bgp-max-pfx-rulebook.yml -i neox_inventory.yml --verbose --print-events
+# ansible-rulebook --rulebook rulebooks/bgp-max-pfx-rulebook.yml -i netbox_inventory.yml --verbose --print-events
 - name: Listen Kafka Events for BGP Neighbors
   hosts: all
   sources:

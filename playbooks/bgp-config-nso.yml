@@ -8,11 +8,14 @@
     - cisco.nso
 
   # ansible-playbook -i cml_hosts.yml playbooks/bgp-config-nso.yml
-  
+  # export NSO_URL=http://nso_url
+  # export NSO_USERNAME=<nso_username>
+  # export NSO_PASSWORD=<nso_password>
+
   vars:
-    nso_url: http://10.250.78.80:8081
-    nso_username: admin
-    nso_password: admin
+    nso_url: "{{ lookup('env', 'NSO_URL') }}"
+    nso_username: "{{ lookup('env', 'NSO_USERNAME') }}"
+    nso_password: "{{ lookup('env', 'NSO_PASSWORD') }}"
 
   tasks:
     - name: CONFIGURE BGP MAX PREFIX LIST ON IOS-XR DEVICE
@@ -36,7 +39,7 @@
                               ipv4:
                                 unicast:
                                   maximum-prefix:
-                                    max-prefix-limit: 4
+                                    max-prefix-limit: 8
                                     threshold: 75
       register: config_output
 

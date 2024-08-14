@@ -1,6 +1,7 @@
 ---
 - name: BGP Max Prefixes Limit Fix with Cisco NSO
   hosts: cml-core-rtr02
+  # hosts: cml_devices
   gather_facts: false
   connection: ansible.netcommon.network_cli
   collections:
@@ -46,6 +47,45 @@
     - name: Display output on the terminal
       ansible.builtin.debug:
         msg: "{{ config_output }}"
+
+    - name: GET DEVICEs IN SYNC WITH NSO FROM DEVICEs
+      nso_action:
+        username: "{{ nso_username }}"
+        password: "{{ nso_password }}"
+        url: "{{ nso_url }}/jsonrpc"
+        path: /ncs:devices/sync-from
+        input: {} # sync from all devices 
+        # input: { "device": ["{{ inventory_hostname }}"] } # sync from one device
+      changed_when: False
+      register: sync_from
+
+    - name: Display output of the sync from
+      ansible.builtin.debug:
+        msg: "{{ sync_from }}"
+
+    - name: CHECK DEVICEs IN SYNC WITH NSO
+      nso_action:
+        username: "{{ nso_username }}"
+        password: "{{ nso_password }}"
+        url: "{{ nso_url }}/jsonrpc"
+        path: /ncs:devices/check-sync
+        input: {}
+      changed_when: False
+      register: check_sync
+
+    - name: Display output of the sync status
+      ansible.builtin.debug:
+        msg: "{{ check_sync }}"
+
+    # - name: CHECK NSO DEVICE SYNC STATUS
+    #   uri:
+    #     url: "{{ nso_url }}/restconf/operations/tailf-ncs:devices/device={{inventory_hostname}}/check-sync"
+    #     url_username: "{{ nso_username }}"
+    #     url_password: "{{ nso_password }}"
+    #     method: POST
+    #     headers:
+    #       Content-Type: application/yang-data+json
+    #   register: check_sync
 
     # - name: Get the BGP Neighbor State
     #   cisco.iosxr.iosxr_command:
